@@ -1,3 +1,4 @@
+require 'fileutils'
 class MotorCycle
 
 	attr_accessor :merk, :milik, :tahun, :type, :kecepatan, :bensin, :jarak_tempuh, :waktu_tempuh
@@ -5,20 +6,34 @@ class MotorCycle
 		LITER_BENSIN = 109.8
 		HOURS = 3600
 		
+	def self.build_from_questions
+		args = {}
+		print "Merk\t"
+		args[:merk] = gets.chomp.strip 
+		print "Milik\t"
+		args[:milik] = gets.chomp.strip
+		print "Tahun\t"
+		args[:tahun] = gets.chomp.strip
+		print "Tipe Motor\t" 
+		args[:type] = gets.chomp.strip
+		print "Bensin\t" 
+		args[:bensin] = gets.chomp.strip
+		return self.new(args)
+	end
 
-	def initialize(merk = "Yamaha", milik = "Lufy", tahun = 2018, type = "Matic", bensin = 1)
-		if bensin >= 0 
-			@merk = merk
-			@milik = milik
-			@tahun = tahun
+	def initialize(args={})
+		# if args[:bensin] >= 0 
+			@merk 				= args[:merk] 	
+			@milik 				= args[:milik] 	
+			@tahun 				= args[:tahun] 	
+			@type 				= args[:type] 	
+			# @bensin_awal_edit 	= args[:bensin] 
 			@jam_awal = 0
 			@jarak_awal = 0
-			@type = type
-			@bensin_awal = bensin
-			@bensin_awal_edit = bensin
-		elsif 
-			puts "Bensin kurang dari 0 "	
-		end
+			@bensin 			= args[:bensin]
+		# elsif 
+		# 	puts "Bensin kurang dari 0 "	
+		# end
 	end
 	
 	def refill(bensin)
@@ -81,7 +96,8 @@ class MotorCycle
 
 	@@filepath = nil
 	def self.filepath=(path=nil)
-		@@filepath =File.join(APP_ROOT, path)
+		@@filepath = File.join(APP_ROOT, path)
+		# @@output = 
 	end
 
 	def self.file_exists?
@@ -107,10 +123,43 @@ class MotorCycle
 		return file_usable?
 	end
 
-	def self.saved_restaurant
-		#read  the motor cycle file
-		#return instance restaurant
+
+	def self.saved_motor_cycles
+		motor_cycle = []
+		if file_usable? 
+			file = File.new(@@filepath, 'r')
+			file.each_line do |line|
+				motor_cycle << MotorCycle.new.import_line(line.chomp)
+			end
+			file.close
+		end
+		return motor_cycle
 	end
 
-	
+	def self.write_delete(keyword)
+		File.open("output.txt", 'w') do |f|
+			saved_motor_cycles.each do |motor|
+				unless motor.milik == keyword
+					f.puts "#{[motor.merk, motor.milik, motor.tahun, motor.type, motor.bensin].join("\t")}\n"
+				end
+			end
+		end
+
+	end
+
+	def import_line(line)
+		line_array = line.split("\t")
+		@merk, @milik, @tahun, @type, @bensin = line_array
+		return self #return objek nya sendiri
+	end
+
+	def save
+		#read  the motor cycle file
+		#return instance restaurant
+		retun false unless MotorCycle.file_usable?
+		File.open(@@filepath, 'a') do |file|
+			file.puts "#{[@merk, @milik, @tahun, @type, @bensin].join("\t")}\n"
+		end
+		return true
+	end
 end
