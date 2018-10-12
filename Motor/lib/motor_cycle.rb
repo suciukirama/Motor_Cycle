@@ -26,7 +26,7 @@ class MotorCycle
 			@merk 				= args[:merk] 	
 			@milik 				= args[:milik] 	
 			@tahun 				= args[:tahun] 	
-			@type 				= args[:type] 	
+			@type 				= args[:type]	
 			# @bensin_awal_edit 	= args[:bensin] 
 			@jam_awal = 0
 			@jarak_awal = 0
@@ -46,36 +46,62 @@ class MotorCycle
 		end
 	end
 
-	def run(waktu)
-
-		if waktu >= 1
-			# liter_bensin = 109.8
-			#detik ubah ke @jam
-			@jam = waktu.to_f / 3600.to_f
-			@jarak = @jam * 60 
-			puts LITER_BENSIN
-			puts @bensin
-			if @bensin != nil
-				abiltity_gas = @bensin * LITER_BENSIN
-				@bensin = (@bensin.to_f * LITER_BENSIN) - @jarak.to_f / LITER_BENSIN
-			elsif 
-				abiltity_gas = @bensin_awal_edit * LITER_BENSIN	
-				@bensin = ((@bensin_awal_edit.to_f * LITER_BENSIN) - @jarak.to_f) / LITER_BENSIN
+	def self.run(waktu, milik)
+		@jam = waktu.to_f / 3600.to_f
+		@jarak = @jam * 60 
+		if waktu.to_i >= 1
+			File.open("output.txt", 'w') do |f|
+				saved_motor_cycles.each do |motor|
+					if motor.milik == milik	
+						@abiltity_gas = motor.bensin.to_f * LITER_BENSIN
+						motor.bensin = (motor.bensin.to_f * LITER_BENSIN) - @jarak.to_f / LITER_BENSIN	
+						f.puts "#{[motor.merk, motor.milik, motor.tahun, motor.type, motor.bensin].join("\t")}\n"
+					end
+				end
 			end
-			
-			if @jarak > abiltity_gas 
-				if abiltity_gas == 0.0
+
+			if @jarak > @abiltity_gas 
+				if @abiltity_gas.to_f == 0.0
 					puts "isi bensin"
 				else
-					puts abiltity_gas
+					puts @abiltity_gas
 				end	
 			else
 				puts @jarak
 			end
-		elsif 
+
+		else
 			puts "waktu kurang dari 1 detik"
 		end
-		puts @bensin
+
+		# if waktu >= 1
+		# 	# liter_bensin = 109.8
+		# 	#detik ubah ke @jam
+		# 	@jam = waktu.to_f / 3600.to_f
+		# 	@jarak = @jam * 60 
+		# 	puts LITER_BENSIN
+		# 	puts @bensin
+		# 	if @bensin != nil
+		# 		@abiltity_gas = @bensin * LITER_BENSIN
+		# 		@bensin = (@bensin.to_f * LITER_BENSIN) - @jarak.to_f / LITER_BENSIN
+		# 	elsif 
+		# 		abiltity_gas = @bensin_awal_edit * LITER_BENSIN	
+		# 		@bensin = ((@bensin_awal_edit.to_f * LITER_BENSIN) - @jarak.to_f) / LITER_BENSIN
+		# 	end
+			
+		# 	if @jarak > abiltity_gas 
+		# 		if abiltity_gas == 0.0
+		# 			puts "isi bensin"
+		# 		else
+		# 			puts abiltity_gas
+		# 		end	
+		# 	else
+		# 		puts @jarak
+		# 	end
+		# elsif 
+		# 	puts "waktu kurang dari 1 detik"
+		# end
+		# puts @bensin
 	end
 	#("Yamaha", "Ojan", "2018", "Vario", 60, 4)
 
@@ -144,8 +170,8 @@ class MotorCycle
 				end
 			end
 		end
-
 	end
+
 
 	def import_line(line)
 		line_array = line.split("\t")
@@ -155,7 +181,6 @@ class MotorCycle
 
 	def save
 		#read  the motor cycle file
-		#return instance restaurant
 		retun false unless MotorCycle.file_usable?
 		File.open(@@filepath, 'a') do |file|
 			file.puts "#{[@merk, @milik, @tahun, @type, @bensin].join("\t")}\n"

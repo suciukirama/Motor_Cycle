@@ -3,7 +3,7 @@ require 'motor_cycle'
 class Guide
 
 	class Config
-		@@actions = ['list', 'choose', 'add', 'delete','quit']
+		@@actions = ['list', 'choose', 'add', 'delete','quit', 'run', 'refill']
 		def self.actions; @@actions; end
 	end
 
@@ -58,10 +58,18 @@ class Guide
 		when 'delete'
 			keyword = args.shift
 			delete(keyword)
+		when 'run'
+			puts "Which motor you want to run?"
+			milik = gets.chomp
+			puts 'How long you want to run?'
+			waktu = gets.chomp
+			run(waktu, milik)
+		when 'refill'
+			puts "Which motor you want to refill?"
 		when 'quit'
 			return :quit
 		else
-			puts "\n Indont Understand that command \n"
+			puts "\n I dont Understand that command \n"
 
 		end
 	end
@@ -98,16 +106,7 @@ class Guide
 
 	def delete(keyword=nil)
 		if keyword
-
-			# motor_cycle = MotorCycle.saved_motor_cycles
 					MotorCycle.write_delete(keyword)
-			# found = motor_cycle.select do |motor| 
-			# 	if motor.milik.downcase.include?(keyword.downcase)
-			# 		puts "#{keyword} deleted"
-			# 	else
-			# 		puts "#{keyword} not found"
-			# 	end
-			# end
 					puts "#{keyword} deleted"
 		else
 			puts "Please find by name"
@@ -115,11 +114,28 @@ class Guide
 		end	
 	end
 
+	def run(waktu, milik)
+		if milik
+			MotorCycle.run(waktu, milik)
+			puts "success"
+		else
+			puts "Please insert time and name"
+			puts "Example run 3000 Zoro"
+		end
+	end
+
 
 
 	def introduction
 		puts "\n\n Welcome to Motor "
 		puts "This is interactive guide to help you organize Motor . \n\n"
+		puts "-- add for adding Motor data . \n"
+		puts "-- list for list of data Motor data . \n"
+		puts "-- delete for remove Motor data . \n"
+		puts "-- add for adding Motor data . \n"
+		puts "-- choose for show selected Motor data . \n"
+		puts "-- run for run your Motor . \n"
+		puts "-- refill for adding Motor data . \n"
 	end
 
 	def conclusion
@@ -133,13 +149,13 @@ class Guide
 		end
 
 		def output_motor_cycle_table(motor_cycle=[])
-			print "Merk: 	".ljust(20)
+			print "Merk".ljust(20)
 			print 'Pemilik'.ljust(20)
 			print 'Tahun'.ljust(20)
 			print 'Type'.ljust(20)
 			print 'Bensin'.ljust(20)
 			puts " "
-			puts "-" * 80
+			puts "-" * 100
 
 			motor_cycle.each do |motor|
 				line = " " << "#{motor.merk}".ljust(20)
@@ -151,7 +167,7 @@ class Guide
 
 			end
 			puts "No listing found" if motor_cycle.empty?
-			puts "-" * 80
+			puts "-" * 100
 		end
 end
 
