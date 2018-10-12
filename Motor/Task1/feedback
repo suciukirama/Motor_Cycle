@@ -1,0 +1,98 @@
+initialize
+
+motor
+
+NOTE: 1 Liter = 109.8 KM/Liter
+
+1. init: bensin kosong
+2. jalanin 1jam -> 0 m 
+	(total waktu tempuh 1 jam, 
+	sisa bensin 0 L, 
+	total jarak tempuh 0 km)
+
+3. isi bensin 10 L -> bensin sekarang 10 L
+4. jalanin 1 Jam -> 60 km 
+	(total waktu tempuh 2 jam,
+	sisa bensin: 9,45 L,
+	total jarak tempuh:60km )
+
+5. jalanin 10 jam -> 600 km 
+	(total waktu 12 tempuh jam, 
+	sisa bensin: 3,98 L, 
+	total jarak tempuh: 660km )
+
+6. jalanin 10 jam -> 438 km
+	total waktu tempuh 22 jam,
+	sisa bensin 0
+	total jarak tempuh 1098
+
+7. reset 
+	(total waktu tempuh 0 jam, sisa bensin: 0  L, total jarak tempuh: 0km)
+
+8. jalanin 1 jam -> 0 km
+	(total waktu 1 tempuh jam, sisa bensin: 0 L, total jarak tempuh: 0km)
+
+
+
+motor
+1. init: 10 L
+2. jalanin 1 jam -> 60 km 
+	(total waktu tempuh 1 jam, 
+	sisa bensin 9,45 L , 
+	total jarak tempuh 60km )
+
+3. isi bensin 10 L -> (bensin 19,45 l)
+
+4. jalanin 1 Jam -> 60 km 
+	(total waktu tempuh 2 jam, 
+	sisa bensin 18.90 L, 
+	total jarak tempuh 120km)
+
+5. jalanin 10 jam -> 600 km 
+	(total waktu tempuh 12jam , 
+	sisa bensin 13.44 L, 
+	total jarak = 720)
+
+6. jalanin 10 jam -> 600 km 
+	(total waktu tempuh 22, 
+	sisa bensin 7.97, 
+	total jarak 1320) 
+
+7. reset (sisa bensin balik ke 10 L)
+	(total waktu tempuh 0 jam, sisa bensin: 0  L, total jarak tempuh: 0km)
+
+8. jalanin 11 jam -> 660 km
+	(total waktu tempuh 11 jam, sisa bensin 3.98, total jarak 660) 
+
+@bensin_awal
+@bensin_awal_edit dihapus
+@bensin != nil -> hilang
+
+
+a = MotorCycle.new
+a.refill(1)
+a.run(300)
+
+a = MotorCycle.new(merk = "Yamaha", milik = "Lufy", tahun = 2018, type = "Matic", bensin = 0)
+a.run(3600)
+a.refill(10)
+a.run(3600)
+a.run(36000)
+a.run(36000)
+a.reset
+a.run(3600)
+
+
+a = MotorCycle.new(merk = "Yamaha", milik = "Lufy", tahun = 2018, type = "Matic", bensin = 10)
+a.run(3600)
+a.refill(10)
+a.run(3600)
+a.run(36000)
+a.run(36000)
+a.reset
+a.run(39600)
+
+
+
+
+tambah total waktu, tambah total jarak
